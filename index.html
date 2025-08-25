@@ -26,7 +26,8 @@
             --primary-hover: #4338ca;    /* indigo-700 */
             --secondary: #14b8a6;        /* teal-500 */
             --accent: #ec4899;           /* pink-500 */
-            --subtle-hover-bg: #dbeafe;   /* blue-100 */
+            --subtle-hover-bg: #f1f5f9;   /* slate-100 */
+            --chapter-header-bg: #eff6ff; /* blue-50 */
         }
         
         html.dark {
@@ -37,6 +38,7 @@
             --border-color: #334155;     /* slate-700 */
             --input-bg: #334155;         /* slate-700 */
             --subtle-hover-bg: #334155;   /* slate-700 */
+            --chapter-header-bg: #1e293b; /* slate-800 */
         }
 
         body {
@@ -126,7 +128,7 @@
         }
         
         /* Chapter Dropdown Styles */
-        details.chapter-accordion summary { list-style: none; cursor: pointer; }
+        details.chapter-accordion summary { list-style: none; cursor: pointer; background-color: var(--chapter-header-bg); }
         details.chapter-accordion summary::-webkit-details-marker { display: none; }
         details.chapter-accordion summary .chapter-arrow { transition: transform 0.2s; }
         details.chapter-accordion[open] > summary .chapter-arrow { transform: rotate(90deg); }
@@ -135,6 +137,33 @@
         .custom-subtle-hover:hover {
             background-color: var(--subtle-hover-bg);
         }
+
+        /* NEW: Resource Button Styling */
+        .resource-toggle {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease-in-out;
+        }
+        .resource-toggle:hover {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+        .resource-toggle.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        html.dark .resource-toggle:hover, html.dark .resource-toggle.active {
+             color: white;
+        }
+
+        /* NEW: Dark Mode Progress Bar Gradient */
+        html.dark #progress-bar {
+            background-image: linear-gradient(to right, #818cf8, #2dd4bf); /* indigo-400 to teal-400 */
+        }
+
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -244,14 +273,14 @@
                     <div class="bg-[var(--card-bg)] p-4 rounded-2xl border border-[var(--border-color)] shadow-lg">
                         <div id="progress-container" class="mb-4 p-2">
                             <div class="flex justify-between items-center mb-1">
-                                <span class="text-sm font-medium text-[var(--primary)]">ความคืบหน้าของคอร์ส</span>
-                                <span id="progress-text" class="text-sm font-medium text-[var(--primary)]">0%</span>
+                                <span class="text-sm font-medium text-[var(--primary)] dark:text-[var(--text-primary)]">ความคืบหน้าของคอร์ส</span>
+                                <span id="progress-text" class="text-sm font-medium text-[var(--primary)] dark:text-[var(--text-primary)]">0%</span>
                             </div>
                             <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5">
                                 <div id="progress-bar" class="bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
                             </div>
                         </div>
-                        <h3 class="text-xl font-bold p-2 border-t border-[var(--border-color)]">เนื้อหาบทเรียน</h3>
+                        <h3 class="text-xl font-bold p-2 border-t border-[var(--border-color)] ">เนื้อหาบทเรียน</h3>
                         <div id="video-parts-container" class="mt-2 max-h-[50vh] overflow-y-auto pr-2 space-y-3"></div>
                     </div>
                 </div>
@@ -290,7 +319,7 @@
             courses: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MA==',
             videoParts: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTE1MzMxMDQ5Mg==',
             keys: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTUzMDg3ODk0OQ==',
-            resources: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1dWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTczMzIxNjAwOQ=='
+            resources: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTczMzIxNjAwOQ=='
         };
 
         const getUrl = (key) => atob(encodedUrls[key]);
@@ -600,19 +629,21 @@
             }, {});
 
             if (Object.keys(groupedByChapter).length > 0) {
+                let isFirstChapter = true; // Flag for the first chapter
                 for (const chapter in groupedByChapter) {
                     const parts = groupedByChapter[chapter];
                     
                     let partsHTML = '<ul class="space-y-1">';
+                    let lessonCounter = 1; // Reset lesson counter for each chapter
                     parts.forEach(part => {
                         const isLocked = part.keyId && !unlocked;
                         const hasResources = part.resources && part.resources.length > 0;
                         const resourcesHTML = hasResources && unlocked ? `<div class="resource-list hidden pl-12 pr-4 pb-3 pt-2"><ul class="space-y-2 border-t border-[var(--border-color)] pt-3">${part.resources.map(res => `<li><a href="${res.resourceUrl}" target="_blank" rel="noopener noreferrer" class="flex items-center text-indigo-600 dark:text-indigo-400 hover:underline text-sm"><i data-lucide="${getIconForResourceType(res.resourceType)}" class="w-4 h-4 mr-2"></i><span>${res.resourceTitle}</span></a></li>`).join('')}</ul></div>` : '';
-                        const resourceBtn = hasResources && unlocked ? `<button class="resource-toggle p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-600"><i data-lucide="paperclip" class="w-5 h-5 text-slate-500"></i></button>` : '';
+                        const resourceBtn = hasResources && unlocked ? `<button class="resource-toggle p-2 rounded-full"><i data-lucide="paperclip" class="w-5 h-5"></i></button>` : '';
                         partsHTML += `<li class="overflow-hidden" data-part-index="${part.originalIndex}">
                             <div class="video-trigger flex items-center justify-between cursor-pointer p-3 rounded-lg custom-subtle-hover transition-colors duration-200">
                                 <div class="flex items-center min-w-0">
-                                    <span class="lesson-number bg-slate-100 dark:bg-slate-700/50 text-slate-700 dark:text-slate-200 rounded-md h-8 w-8 flex items-center justify-center font-bold text-xs mr-3 flex-shrink-0">${part.originalIndex + 1}</span>
+                                    <span class="lesson-number bg-blue-100 dark:bg-blue-700/50 text-blue-700 dark:text-slate-200 rounded-md h-8 w-8 flex items-center justify-center font-bold text-xs mr-3 flex-shrink-0">${lessonCounter++}</span>
                                     <span class="font-medium truncate">${part.title}</span>
                                 </div>
                                 <div class="flex items-center space-x-1">${resourceBtn}<i data-lucide="${isLocked ? 'lock' : 'play-circle'}" class="${isLocked ? 'text-amber-500' : 'text-[var(--primary)]'} w-6 h-6"></i></div>
@@ -623,17 +654,18 @@
                     partsHTML += '</ul>';
 
                     const chapterHTML = `
-                        <details class="chapter-accordion bg-[var(--card-bg)] rounded-xl border border-[var(--border-color)] overflow-hidden" open>
-                            <summary class="p-4 font-bold text-lg flex justify-between items-center custom-subtle-hover transition-colors duration-200">
+                        <details class="chapter-accordion bg-[var(--card-bg)] rounded-xl border border-[var(--border-color)] overflow-hidden" ${isFirstChapter ? 'open' : ''}>
+                            <summary class="p-4 font-bold text-lg flex justify-between items-center transition-colors duration-200">
                                 <span>${chapter}</span>
                                 <i data-lucide="chevron-right" class="chapter-arrow w-5 h-5 text-[var(--text-secondary)]"></i>
                             </summary>
-                            <div class="p-2 border-t border-[var(--border-color)]">
+                            <div class="p-2 border-t border-[var(--border-color)] bg-[var(--card-bg)]">
                                 ${partsHTML}
                             </div>
                         </details>
                     `;
                     $container.append(chapterHTML);
+                    isFirstChapter = false; // Unset flag after the first chapter
                 }
                 lucide.createIcons();
             } else {
@@ -663,7 +695,11 @@
             }
         });
 
-        $(document).on('click', '.resource-toggle', function(e) { e.stopPropagation(); $(this).closest('li').find('.resource-list').slideToggle(200); $(this).toggleClass('bg-slate-300 dark:bg-slate-600'); });
+        $(document).on('click', '.resource-toggle', function(e) { 
+            e.stopPropagation(); 
+            $(this).closest('li').find('.resource-list').slideToggle(200); 
+            $(this).toggleClass('active'); 
+        });
 
         $(document).on('click', '#submit-key-input', function() {
             const enteredKey = $('#key-input').val().trim();
