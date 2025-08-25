@@ -689,10 +689,10 @@
             const paginatedItems = filteredCourses.slice((currentPage - 1) * perPage, currentPage * perPage);
 
             if (viewType === 'grid') {
-                $container.removeClass('space-y-3').addClass('grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6');
+                $container.removeClass('space-y-3').addClass('grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6');
                 paginatedItems.forEach(course => $container.append(createCourseGridCard(course)));
             } else {
-                $container.removeClass('grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-6').addClass('space-y-3');
+                $container.removeClass('grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6').addClass('space-y-3');
                 paginatedItems.forEach(course => $container.append(createCourseListCard(course)));
             }
             updatePaginationControls(filteredCourses.length, totalPages);
