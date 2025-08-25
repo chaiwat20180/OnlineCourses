@@ -103,28 +103,103 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Modern Dropdown */
-        .custom-select {
-            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+        /* NEW: Custom Searchable Dropdown */
+        .custom-dropdown-container {
+            min-width: 150px;
+        }
+        .custom-select-trigger {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
             border-radius: 9999px; /* pill shape */
-            padding: 0.65rem 2.5rem 0.65rem 1rem;
+            padding: 0.65rem 1rem;
             font-weight: 500;
             color: var(--text-primary);
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-chevrons-up-down'%3e%3cpath d='m7 15 5 5 5-5'/%3e%3cpath d='m7 9 5-5 5 5'/%3e%3c/svg%3e");
-            background-position: right 0.5rem center;
-            background-repeat: no-repeat;
-            background-size: 1.25em 1.25em;
             transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
-        html.dark .custom-select {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-chevrons-up-down'%3e%3cpath d='m7 15 5 5 5-5'/%3e%3cpath d='m7 9 5-5 5 5'/%3e%3c/svg%3e");
-        }
-        .custom-select:focus {
+        .custom-select-trigger:focus, .custom-select-trigger.open {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        .custom-select-trigger span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .custom-select-trigger i {
+            width: 1.25em;
+            height: 1.25em;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+        .custom-select-trigger.open i {
+            transform: rotate(180deg);
+        }
+
+        .custom-dropdown-panel {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            width: 100%;
+            max-height: 250px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            z-index: 50;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .custom-dropdown-search-wrapper {
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .custom-dropdown-search {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--input-bg);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+        .custom-dropdown-search:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+
+        .custom-dropdown-options {
+            list-style: none;
+            padding: 0.5rem;
+            margin: 0;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .custom-dropdown-options li {
+            padding: 0.65rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s, color 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .custom-dropdown-options li:hover, .custom-dropdown-options li.selected {
+            background-color: var(--primary);
+            color: white;
+        }
+        .custom-dropdown-options li.hidden {
+            display: none;
         }
         
         /* Chapter Dropdown Styles */
@@ -138,25 +213,42 @@
             background-color: var(--subtle-hover-bg);
         }
 
-        /* NEW: Resource Button Styling */
+        /* REVISED: Resource Button Styling */
         .resource-toggle {
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
+            color: var(--text-secondary);
             transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         }
-        .resource-toggle:hover {
-            background-color: var(--primary);
+        /* Light mode hover/focus */
+        .resource-toggle:hover, .resource-toggle:focus-visible {
+            background-color: var(--subtle-hover-bg);
             border-color: var(--primary);
-            color: white;
-            transform: scale(1.1);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px 0 rgb(79 70 229 / 20%);
+            outline: none; /* for focus-visible */
         }
+        /* Dark mode hover/focus */
+        html.dark .resource-toggle:hover, html.dark .resource-toggle:focus-visible {
+            background-color: #334155; /* slate-700 */
+            border-color: #818cf8; /* indigo-400 */
+            color: #818cf8; /* indigo-400 */
+        }
+        /* Active state for both modes */
         .resource-toggle.active {
-            background-color: var(--primary);
-            border-color: var(--primary);
+            background-color: var(--accent);
+            border-color: var(--accent);
             color: white;
+            transform: translateY(0);
+            box-shadow: 0 4px 14px 0 rgb(79 70 229 / 39%);
         }
-        html.dark .resource-toggle:hover, html.dark .resource-toggle.active {
-             color: white;
+        /* Dark mode active state override */
+        html.dark .resource-toggle.active {
+            background-color: var(--accent);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgb(79 70 229 / 30%);
         }
 
         /* NEW: Dark Mode Progress Bar Gradient */
@@ -228,18 +320,45 @@
                     <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5"></i>
                 </div>
                 <div class="flex items-center space-x-4 text-sm flex-wrap gap-y-2 justify-center">
+                    
+                    <!-- NEW Custom Dropdown for Category -->
                     <div class="flex items-center space-x-2">
                         <label class="font-medium hidden sm:block text-[var(--text-secondary)]">หมวดหมู่:</label>
-                        <select id="category-filter" class="custom-select">
-                            <option value="all">ทั้งหมด</option>
-                        </select>
+                        <div id="custom-category-filter" class="relative custom-dropdown-container w-48">
+                            <button class="custom-select-trigger">
+                                <span class="truncate">ทั้งหมด</span>
+                                <i data-lucide="chevrons-up-down" class="ml-2"></i>
+                            </button>
+                            <div class="custom-dropdown-panel hidden">
+                                <div class="custom-dropdown-search-wrapper">
+                                    <input type="text" class="custom-dropdown-search" placeholder="ค้นหาหมวดหมู่...">
+                                </div>
+                                <ul class="custom-dropdown-options">
+                                    <!-- Options populated by JS -->
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                     <div class="flex items-center space-x-2">
+
+                    <!-- NEW Custom Dropdown for Items Per Page -->
+                    <div class="flex items-center space-x-2">
                         <label class="font-medium hidden sm:block text-[var(--text-secondary)]">แสดง:</label>
-                        <select id="items-per-page" class="custom-select">
-                            <option value="6">6</option><option value="9">9</option><option value="12">12</option><option value="all">ทั้งหมด</option>
-                        </select>
+                        <div id="custom-items-per-page" class="relative custom-dropdown-container w-28">
+                            <button class="custom-select-trigger">
+                                <span class="truncate">6</span>
+                                <i data-lucide="chevrons-up-down" class="ml-2"></i>
+                            </button>
+                            <div class="custom-dropdown-panel hidden">
+                                <ul class="custom-dropdown-options">
+                                    <li data-value="6">6</li>
+                                    <li data-value="9">9</li>
+                                    <li data-value="12">12</li>
+                                    <li data-value="all">ทั้งหมด</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="flex items-center space-x-2">
                         <label class="font-medium hidden sm:block text-[var(--text-secondary)]">มุมมอง:</label>
                         <div class="flex items-center bg-[var(--input-bg)] p-1 rounded-full border border-[var(--border-color)]">
@@ -301,14 +420,12 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         
         let youtubePlayer, isYouTubeApiReady = false;
-        // MODIFIED: Added a variable to queue a video if the API isn't ready.
         let queuedVideo = null; 
         window.onYouTubeIframeAPIReady = () => { 
             isYouTubeApiReady = true; 
-            // MODIFIED: Check if a video was queued and play it now.
             if (queuedVideo) {
                 playYouTubeVideo(queuedVideo.videoId, queuedVideo.partIndex);
-                queuedVideo = null; // Clear the queue
+                queuedVideo = null;
             }
         };
         $('#currentYear').text(`2025 - ${new Date().getFullYear()}`);
@@ -453,10 +570,17 @@
                 });
 
                 const categories = [...new Set(allCourses.flatMap(c => c.category ? c.category.split(',').map(cat => cat.trim()) : []).filter(Boolean))];
-                const $categoryFilter = $('#category-filter');
+                const $categoryOptions = $('#custom-category-filter .custom-dropdown-options');
+                $categoryOptions.empty();
+                $categoryOptions.append('<li data-value="all" class="selected">ทั้งหมด</li>');
                 categories.forEach(category => {
-                    $categoryFilter.append(`<option value="${category}">${category}</option>`);
+                    $categoryOptions.append(`<li data-value="${category}">${category}</li>`);
                 });
+                
+                // Set initial value for items-per-page dropdown
+                $('#custom-items-per-page').data('value', '6');
+                $('#custom-items-per-page .custom-select-trigger span').text('6');
+                $('#custom-items-per-page .custom-dropdown-options li[data-value="6"]').addClass('selected');
 
                 filteredCourses = [...allCourses];
                 renderCourses();
@@ -472,10 +596,71 @@
         
         $('#logout-button').on('click', () => { sessionStorage.clear(); localStorage.clear(); location.reload(); });
 
+        // --- NEW: Custom Dropdown Logic ---
+        function initCustomDropdowns() {
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.custom-dropdown-container').length) {
+                    $('.custom-dropdown-panel').addClass('hidden');
+                    $('.custom-select-trigger').removeClass('open');
+                }
+            });
+
+            $('.custom-select-trigger').on('click', function(e) {
+                e.stopPropagation();
+                const $container = $(this).closest('.custom-dropdown-container');
+                const $panel = $container.find('.custom-dropdown-panel');
+                
+                $('.custom-dropdown-panel').not($panel).addClass('hidden');
+                $('.custom-select-trigger').not(this).removeClass('open');
+
+                $panel.toggleClass('hidden');
+                $(this).toggleClass('open');
+                
+                if ($(this).hasClass('open')) {
+                    $panel.find('.custom-dropdown-search').val('').keyup().focus();
+                }
+            });
+
+            $('.custom-dropdown-options').on('click', 'li', function() {
+                const $container = $(this).closest('.custom-dropdown-container');
+                const $trigger = $container.find('.custom-select-trigger');
+                const value = $(this).data('value');
+                const text = $(this).text();
+
+                $trigger.find('span').text(text);
+                $container.data('value', value);
+
+                $container.find('li').removeClass('selected');
+                $(this).addClass('selected');
+
+                $trigger.removeClass('open');
+                $container.find('.custom-dropdown-panel').addClass('hidden');
+
+                const containerId = $container.attr('id');
+                if (containerId === 'custom-category-filter') {
+                    applyFiltersAndRender();
+                } else if (containerId === 'custom-items-per-page') {
+                    itemsPerPage = value;
+                    currentPage = 1;
+                    renderCourses();
+                }
+            });
+
+            $('.custom-dropdown-search').on('keyup', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                const $options = $(this).closest('.custom-dropdown-panel').find('.custom-dropdown-options li');
+                
+                $options.each(function() {
+                    const text = $(this).text().toLowerCase();
+                    $(this).toggleClass('hidden', !text.includes(searchTerm));
+                });
+            });
+        }
+
         // --- Course Rendering, Filtering, Pagination ---
         function applyFiltersAndRender() {
             const searchTerm = $('#search-input').val().toLowerCase();
-            const selectedCategory = $('#category-filter').val();
+            const selectedCategory = $('#custom-category-filter').data('value') || 'all';
 
             filteredCourses = allCourses.filter(course => {
                 const matchesSearch = course.title.toLowerCase().includes(searchTerm);
@@ -503,10 +688,10 @@
             const paginatedItems = filteredCourses.slice((currentPage - 1) * perPage, currentPage * perPage);
 
             if (viewType === 'grid') {
-                $container.removeClass('space-y-3').addClass('grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6');
+                $container.removeClass('space-y-3').addClass('grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6');
                 paginatedItems.forEach(course => $container.append(createCourseGridCard(course)));
             } else {
-                $container.removeClass('grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6').addClass('space-y-3');
+                $container.removeClass('grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6').addClass('space-y-3');
                 paginatedItems.forEach(course => $container.append(createCourseListCard(course)));
             }
             updatePaginationControls(filteredCourses.length, totalPages);
@@ -559,7 +744,11 @@
 
         function updatePaginationControls(totalItems, totalPages) {
             const $pagination = $('#pagination-controls').empty();
-            if (itemsPerPage === 'all' || totalItems === 0 || totalPages <= 1) return;
+            if (itemsPerPage === 'all' || totalItems === 0 || totalPages <= 1) {
+                $pagination.addClass('hidden');
+                return;
+            }
+            $pagination.removeClass('hidden');
             $pagination.html(`<button id="prev-page" class="px-4 py-2 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--primary)] hover:text-white transition-all">&lt; ก่อนหน้า</button><span id="page-info" class="text-sm font-medium">หน้า ${currentPage} จาก ${totalPages}</span><button id="next-page" class="px-4 py-2 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--primary)] hover:text-white transition-all">ต่อไป &gt;</button>`);
             $('#prev-page').prop('disabled', currentPage === 1);
             $('#next-page').prop('disabled', currentPage === totalPages);
@@ -571,8 +760,6 @@
         }
 
         $('#search-input').on('keyup', applyFiltersAndRender);
-        $('#category-filter').on('change', applyFiltersAndRender);
-        $('#items-per-page').on('change', function() { itemsPerPage = $(this).val(); currentPage = 1; renderCourses(); });
         $('.view-toggle').on('click', function() { viewType = $(this).data('view'); localStorage.setItem('viewType', viewType); renderCourses(); });
         $(document).on('click', '#prev-page', () => { if (currentPage > 1) { currentPage--; renderCourses(); } });
         $(document).on('click', '#next-page', () => { const totalPages = Math.ceil(filteredCourses.length / parseInt(itemsPerPage)); if (currentPage < totalPages) { currentPage++; renderCourses(); } });
@@ -621,20 +808,18 @@
 
             const groupedByChapter = course.videoParts.reduce((acc, part, index) => {
                 const chapter = part.chapter || 'บทเรียนทั่วไป';
-                if (!acc[chapter]) {
-                    acc[chapter] = [];
-                }
+                if (!acc[chapter]) acc[chapter] = [];
                 acc[chapter].push({ ...part, originalIndex: index });
                 return acc;
             }, {});
 
             if (Object.keys(groupedByChapter).length > 0) {
-                let isFirstChapter = true; // Flag for the first chapter
+                let isFirstChapter = true;
                 for (const chapter in groupedByChapter) {
                     const parts = groupedByChapter[chapter];
                     
                     let partsHTML = '<ul class="space-y-1">';
-                    let lessonCounter = 1; // Reset lesson counter for each chapter
+                    let lessonCounter = 1;
                     parts.forEach(part => {
                         const isLocked = part.keyId && !unlocked;
                         const hasResources = part.resources && part.resources.length > 0;
@@ -665,7 +850,7 @@
                         </details>
                     `;
                     $container.append(chapterHTML);
-                    isFirstChapter = false; // Unset flag after the first chapter
+                    isFirstChapter = false;
                 }
                 lucide.createIcons();
             } else {
@@ -742,7 +927,6 @@
 
         // --- YouTube Player ---
         function playYouTubeVideo(videoId, partIndex) {
-            // MODIFIED: If API is not ready, queue the video and show a friendly message.
             if (!isYouTubeApiReady) { 
                 showMessageBox('กำลังเตรียมโปรแกรมเล่นวิดีโอ...', 'success'); 
                 queuedVideo = { videoId, partIndex };
@@ -781,7 +965,11 @@
             }
         }
 
-        $(document).ready(() => { startApp(); lucide.createIcons(); });
+        $(document).ready(() => { 
+            startApp(); 
+            lucide.createIcons(); 
+            initCustomDropdowns();
+        });
     </script>
 </body>
 </html>
