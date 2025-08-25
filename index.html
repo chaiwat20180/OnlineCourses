@@ -259,7 +259,9 @@
         </section>
     </main>
 
-    <footer id="app-footer" class="hidden w-full bg-[var(--card-bg)] text-[var(--text-secondary)] text-center p-4 mt-8 border-t border-[var(--border-color)]"><p>&copy; 2025 Ramune Online. All rights reserved.</p></footer>
+    <footer id="'app-footer" class="w-full bg-[var(--card-bg)] text-[var(--text-secondary)] text-center p-4 mt-8 border-t border-[var(--border-color)]">
+            &copy; <span id="currentYear"></span> <a href="https://github.com/chaiwat20180" target="_blank" rel="noopener noreferrer" class="font-semibold text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300">Chaiwat Kwanta</a>. All rights reserved.
+    </footer>
     <div id="key-modal" class="fixed inset-0 hidden items-center justify-center z-50 bg-slate-900/80 backdrop-blur-sm p-4"></div>
     <div id="message-box" class="fixed bottom-6 right-6 flex items-center space-x-3 text-white px-5 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-500 ease-out z-50"></div>
 
@@ -280,6 +282,7 @@
                 queuedVideo = null; // Clear the queue
             }
         };
+        $('#currentYear').text(`2025 - ${new Date().getFullYear()}`);
 
         // --- URL Obfuscation ---
         const encodedUrls = {
@@ -489,7 +492,7 @@
         };
 
         const createCourseGridCard = (course) => `<div class="bg-[var(--card-bg)] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-[var(--border-color)] overflow-hidden group cursor-pointer transform hover:-translate-y-1 flex flex-col" data-course-id="${course.id}">
-            <div class="relative aspect-video overflow-hidden">
+            <div class="relative overflow-hidden">
                 <img src="${course.youtubeThumbnail || `https://placehold.co/600x400/4f46e5/ffffff?text=${encodeURIComponent(course.title)}`}" alt="${course.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/600x400/334155/F8FAFC?text=Image+Error';"/>
             </div>
             <div class="p-4 flex flex-col flex-grow">
@@ -508,7 +511,7 @@
         </div>`;
 
         const createCourseListCard = (course) => `<div class="bg-[var(--card-bg)] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-[var(--border-color)] overflow-hidden group cursor-pointer transform hover:-translate-y-1 flex items-center" data-course-id="${course.id}">
-            <div class="w-28 sm:w-40 flex-shrink-0 aspect-video overflow-hidden">
+            <div class="w-28 sm:w-40 flex-shrink-0 overflow-hidden">
                 <img src="${course.youtubeThumbnail || `https://placehold.co/400/4f46e5/ffffff?text=${encodeURIComponent(course.title)}`}" alt="${course.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/400/334155/F8FAFC?text=Image+Error';"/>
             </div>
             <div class="p-3 flex-grow w-full">
