@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramune | Online Courses</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- jQuery CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        :root {
+            --background: #f8fafc;      /* slate-50 */
+            --text-primary: #1e293b;     /* slate-800 */
+            --text-secondary: #64748b;   /* slate-500 */
+            --card-bg: #ffffff;          /* white */
+            --border-color: #e2e8f0;     /* slate-200 */
+            --input-bg: #f1f5f9;         /* slate-100 */
+            --primary: #4f46e5;          /* indigo-600 */
+            --primary-hover: #4338ca;    /* indigo-700 */
+            --secondary: #14b8a6;        /* teal-500 */
+            --accent: #ec4899;           /* pink-500 */
+            --subtle-hover-bg: #dbeafe;   /* blue-100 */
+        }
+        
+        html.dark {
+            --background: #0f172a;       /* slate-900 */
+            --text-primary: #e2e8f0;     /* slate-200 */
+            --text-secondary: #94a3b8;   /* slate-400 */
+            --card-bg: #1e293b;          /* slate-800 */
+            --border-color: #334155;     /* slate-700 */
+            --input-bg: #334155;         /* slate-700 */
+            --subtle-hover-bg: #334155;   /* slate-700 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+        .playing .video-trigger {
+            background-color: var(--primary) !important;
+            color: white;
+            box-shadow: 0 4px 14px 0 rgb(79 70 229 / 39%);
+        }
+        html.dark .playing .video-trigger {
+             background-color: var(--primary-hover) !important;
+        }
+        .playing .lesson-number {
+            background: white !important;
+            color: var(--primary) !important;
+        }
+
+        .video-aspect-ratio {
+            position: relative; width: 100%; padding-bottom: 56.25%;
+            height: 0; overflow: hidden; border-radius: 1rem;
+        }
+        .video-aspect-ratio iframe, .video-aspect-ratio .player-placeholder {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        /* Modern Loader */
+        .loader {
+            height: 48px;
+            width: 48px;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        .loader::after {
+            content: '';  
+            box-sizing: border-box;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            border: 3px solid;
+            border-color: var(--secondary) transparent;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Modern Dropdown */
+        .custom-select {
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px; /* pill shape */
+            padding: 0.65rem 2.5rem 0.65rem 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-chevrons-up-down'%3e%3cpath d='m7 15 5 5 5-5'/%3e%3cpath d='m7 9 5-5 5 5'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.25em 1.25em;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        html.dark .custom-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-chevrons-up-down'%3e%3cpath d='m7 15 5 5 5-5'/%3e%3cpath d='m7 9 5-5 5 5'/%3e%3c/svg%3e");
+        }
+        .custom-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        
+        /* Chapter Dropdown Styles */
+        details.chapter-accordion summary { list-style: none; cursor: pointer; }
+        details.chapter-accordion summary::-webkit-details-marker { display: none; }
+        details.chapter-accordion summary .chapter-arrow { transition: transform 0.2s; }
+        details.chapter-accordion[open] > summary .chapter-arrow { transform: rotate(90deg); }
+
+        /* Custom hover style to avoid Tailwind class conflicts */
+        .custom-subtle-hover:hover {
+            background-color: var(--subtle-hover-bg);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 flex items-center justify-center bg-[var(--background)] z-[100] transition-opacity duration-500">
+        <div class="text-center">
+            <span class="loader"></span>
+            <p class="mt-6 text-lg font-medium text-[var(--text-secondary)]">กำลังโหลดข้อมูล...</p>
+        </div>
+    </div>
+
+    <!-- Error Message Display -->
+    <div id="error-message" class="hidden fixed inset-0 flex items-center justify-center bg-red-100/80 backdrop-blur-sm text-red-800 p-4 z-[100]">
+        <div class="bg-white p-8 rounded-2xl shadow-xl text-center border border-red-200">
+            <i data-lucide="alert-circle" class="w-16 h-16 text-red-500 mx-auto mb-4"></i>
+            <p class="text-xl font-semibold"></p>
+        </div>
+    </div>
+
+    <!-- Global Access Key Gate Modal -->
+    <div id="access-gate-modal" class="fixed inset-0 hidden items-center justify-center z-50 bg-slate-900/80 backdrop-blur-sm p-4">
+        <div class="bg-[var(--card-bg)] rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-md border border-[var(--border-color)] transform transition-all duration-300 scale-95 opacity-0">
+            <h3 class="text-2xl font-bold mb-2 text-center">ยินดีต้อนรับสู่ <span class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)]">Ramune</span></h3>
+            <p class="text-[var(--text-secondary)] mb-6 text-center">โปรดป้อนคีย์การเข้าถึงเพื่อเข้าสู่ระบบ</p>
+            <input type="password" id="global-key-input" class="w-full p-3 border border-[var(--border-color)] rounded-lg mb-2 bg-[var(--input-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all" placeholder="Key Access" />
+            <p id="global-key-validation-message" class="text-red-500 text-sm mb-4 h-5"></p>
+            <button id="submit-global-key" class="w-full px-5 py-3 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-full font-semibold transition-all duration-300 shadow-lg shadow-indigo-500/30 transform hover:scale-105">เข้าสู่ระบบ</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header id="app-header" class="hidden sticky top-0 z-40 bg-[var(--background)]/80 backdrop-blur-lg border-b border-[var(--border-color)] transition-all duration-300">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <h1 id="home-button" class="text-2xl font-extrabold cursor-pointer transition-transform hover:scale-105">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)]">Ramune</span>
+            </h1>
+            <div class="flex items-center space-x-2">
+                <button id="theme-toggle" class="p-2 rounded-full custom-subtle-hover transition-colors">
+                    <i data-lucide="sun" class="h-5 w-5 block dark:hidden"></i>
+                    <i data-lucide="moon" class="h-5 w-5 hidden dark:block"></i>
+                </button>
+                <button id="logout-button" class="flex items-center space-x-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 transform hover:scale-105">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <span class="hidden sm:inline">ออกจากระบบ</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="app-main" class="hidden flex-grow container mx-auto p-4 md:p-8">
+        <section id="course-list-section" class="py-8 transition-opacity duration-500 opacity-0">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-extrabold mb-2">หลักสูตรทั้งหมด</h1>
+                <p class="text-lg text-[var(--text-secondary)]">เลือกหลักสูตรที่คุณสนใจเพื่อเริ่มเรียนรู้ได้เลย</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 p-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--border-color)] shadow-sm">
+                <div class="relative w-full md:max-w-md">
+                    <input type="text" id="search-input" placeholder="ค้นหาหลักสูตร..." class="w-full p-3 pl-10 rounded-full border border-[var(--border-color)] bg-[var(--input-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all" />
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5"></i>
+                </div>
+                <div class="flex items-center space-x-4 text-sm flex-wrap gap-y-2 justify-center">
+                    <div class="flex items-center space-x-2">
+                        <label class="font-medium hidden sm:block text-[var(--text-secondary)]">หมวดหมู่:</label>
+                        <select id="category-filter" class="custom-select">
+                            <option value="all">ทั้งหมด</option>
+                        </select>
+                    </div>
+                     <div class="flex items-center space-x-2">
+                        <label class="font-medium hidden sm:block text-[var(--text-secondary)]">แสดง:</label>
+                        <select id="items-per-page" class="custom-select">
+                            <option value="6">6</option><option value="9">9</option><option value="12">12</option><option value="all">ทั้งหมด</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <label class="font-medium hidden sm:block text-[var(--text-secondary)]">มุมมอง:</label>
+                        <div class="flex items-center bg-[var(--input-bg)] p-1 rounded-full border border-[var(--border-color)]">
+                            <button class="view-toggle p-2 rounded-full" data-view="grid"><i data-lucide="layout-grid" class="w-5 h-5"></i></button>
+                            <button class="view-toggle p-2 rounded-full" data-view="list"><i data-lucide="list" class="w-5 h-5"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="course-cards-container" class="min-h-[400px]"></div>
+            <p id="no-results-message" class="hidden text-center text-xl text-[var(--text-secondary)] mt-12">ไม่พบหลักสูตรที่ตรงกับการค้นหาของคุณ</p>
+            
+            <div id="pagination-controls" class="flex justify-center items-center mt-12 space-x-4"></div>
+        </section>
+
+        <section id="course-detail-section" class="hidden py-8 transition-opacity duration-500 opacity-0">
+            <button id="back-to-courses" class="mb-6 flex items-center bg-red-500 hover:bg-red-600 text-white transition-colors duration-200 text-md font-bold py-2 px-4 rounded-full shadow-lg shadow-red-500/30"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i>กลับไปหน้าหลักสูตร</button>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="video-aspect-ratio bg-black flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/10 dark:shadow-black/30">
+                        <div id="player-placeholder" class="player-placeholder text-white text-center text-xl p-4 flex flex-col items-center justify-center"><i data-lucide="play-circle" class="w-16 h-16 mb-4 opacity-50"></i><span class="font-medium">เลือกวิดีโอเพื่อเริ่มต้น</span></div>
+                        <div id="youtube-player-container"></div>
+                    </div>
+                    <div class="bg-[var(--card-bg)] rounded-2xl shadow-lg p-6 md:p-8 border border-[var(--border-color)]">
+                         <h2 id="course-detail-title" class="text-3xl md:text-4xl font-extrabold mb-4"></h2>
+                         <p id="course-detail-description" class="text-lg text-[var(--text-secondary)] mb-6"></p>
+                    </div>
+                </div>
+                <div class="lg:col-span-1">
+                    <div class="bg-[var(--card-bg)] p-4 rounded-2xl border border-[var(--border-color)] shadow-lg">
+                        <div id="progress-container" class="mb-4 p-2">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-sm font-medium text-[var(--primary)]">ความคืบหน้าของคอร์ส</span>
+                                <span id="progress-text" class="text-sm font-medium text-[var(--primary)]">0%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5">
+                                <div id="progress-bar" class="bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-bold p-2 border-t border-[var(--border-color)]">เนื้อหาบทเรียน</h3>
+                        <div id="video-parts-container" class="mt-2 max-h-[50vh] overflow-y-auto pr-2 space-y-3"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="app-footer" class="hidden w-full bg-[var(--card-bg)] text-[var(--text-secondary)] text-center p-4 mt-8 border-t border-[var(--border-color)]"><p>&copy; 2025 Ramune Online. All rights reserved.</p></footer>
+    <div id="key-modal" class="fixed inset-0 hidden items-center justify-center z-50 bg-slate-900/80 backdrop-blur-sm p-4"></div>
+    <div id="message-box" class="fixed bottom-6 right-6 flex items-center space-x-3 text-white px-5 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-500 ease-out z-50"></div>
+
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        
+        let youtubePlayer, isYouTubeApiReady = false;
+        // MODIFIED: Added a variable to queue a video if the API isn't ready.
+        let queuedVideo = null; 
+        window.onYouTubeIframeAPIReady = () => { 
+            isYouTubeApiReady = true; 
+            // MODIFIED: Check if a video was queued and play it now.
+            if (queuedVideo) {
+                playYouTubeVideo(queuedVideo.videoId, queuedVideo.partIndex);
+                queuedVideo = null; // Clear the queue
+            }
+        };
+
+        // --- URL Obfuscation ---
+        const encodedUrls = {
+            pageAccess: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTQ5MTc1NzI1MQ==',
+            courses: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MA==',
+            videoParts: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTE1MzMxMDQ5Mg==',
+            keys: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTUzMDg3ODk0OQ==',
+            resources: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1dWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTczMzIxNjAwOQ=='
+        };
+
+        const getUrl = (key) => atob(encodedUrls[key]);
+
+        let allCourses = [], filteredCourses = [], allKeys = {}, pageAccessKeys = [];
+        let selectedCourseData = null, currentPlayingIndex = -1, currentPage = 1, itemsPerPage = 6, viewType = 'grid';
+        let currentVideoPartToPlay = null;
+
+        // --- Utility & UI Functions ---
+        const showLoading = () => $('#loading-screen').css('opacity', 1).show();
+        const hideLoading = () => { $('#loading-screen').css('opacity', 0); setTimeout(() => $('#loading-screen').hide(), 500); };
+        const showErrorMessage = (msg) => { $('#error-message p').text(`เกิดข้อผิดพลาด: ${msg}`); $('#error-message').removeClass('hidden').addClass('flex'); setTimeout(() => $('#error-message').removeClass('flex').addClass('hidden'), 5000); };
+        
+        function showMessageBox(message, type = 'success') {
+            const $box = $('#message-box').html(`<i id="message-box-icon" class="w-5 h-5" data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}"></i><p>${message}</p>`);
+            $box.removeClass('bg-teal-500 bg-red-500').addClass(type === 'success' ? 'bg-teal-500' : 'bg-red-500');
+            lucide.createIcons();
+            $box.removeClass('translate-y-20 opacity-0').addClass('translate-y-0 opacity-100');
+            setTimeout(() => $box.removeClass('translate-y-0 opacity-100').addClass('translate-y-20 opacity-0'), 4000);
+        }
+
+        function showModal(modalId, content) {
+            const $modal = $(`#${modalId}`);
+            if (content) $modal.html(content);
+            $modal.removeClass('hidden').addClass('flex');
+            $('body').addClass('overflow-hidden');
+            setTimeout(() => $modal.find('.transform').removeClass('scale-95 opacity-0').addClass('scale-100 opacity-100'), 50);
+        }
+
+        function hideModal(modalId) {
+            const $modal = $(`#${modalId}`);
+            $modal.find('.transform').removeClass('scale-100 opacity-100').addClass('scale-95 opacity-0');
+            setTimeout(() => { $modal.removeClass('flex').addClass('hidden'); $('body').removeClass('overflow-hidden'); }, 300);
+        }
+
+        const parseTSV = (text) => {
+            if (!text || typeof text !== 'string') return [];
+            const [headerLine, ...lines] = text.trim().split('\n');
+            if (!headerLine) return [];
+            const headers = headerLine.split('\t').map(h => h.trim());
+            return lines.map(line => line.split('\t').reduce((obj, val, i) => (obj[headers[i]] = val.trim(), obj), {}));
+        };
+
+        // --- Theme Management ---
+        function applyTheme(theme) {
+            if (theme === 'dark') { $('html').addClass('dark'); } 
+            else { $('html').removeClass('dark'); }
+            localStorage.setItem('theme', theme);
+        }
+        $('#theme-toggle').on('click', () => applyTheme($('html').hasClass('dark') ? 'light' : 'dark'));
+
+        // --- App Initialization & Access Control ---
+        async function startApp() {
+            applyTheme(localStorage.getItem('theme') || 'light');
+            viewType = localStorage.getItem('viewType') || 'grid';
+            if (sessionStorage.getItem('isAuthorized') === 'true') { await loadMainContent(); return; }
+            showLoading();
+            try {
+                const res = await $.ajax({ url: getUrl('pageAccess'), dataType: 'text' });
+                pageAccessKeys = parseTSV(res);
+                hideLoading();
+                showModal('access-gate-modal');
+            } catch (error) {
+                console.error("Critical Error fetching access keys:", error);
+                showErrorMessage("ไม่สามารถโหลด Key Access ได้");
+                hideLoading();
+            }
+        }
+        
+        const isKeyExpired = (dateString) => {
+            if (!dateString) return false;
+            let expireDate;
+            if (dateString.includes('/')) {
+                const [day, month, year] = dateString.split('/');
+                expireDate = new Date(year, month - 1, day);
+            } else if (dateString.includes('-')) {
+                const [year, month, day] = dateString.split('-');
+                expireDate = new Date(year, month - 1, day);
+            } else {
+                expireDate = new Date(dateString);
+            }
+            if (isNaN(expireDate.getTime())) return false;
+            const invalidFromDate = new Date(expireDate);
+            invalidFromDate.setDate(invalidFromDate.getDate() + 1);
+            invalidFromDate.setHours(0, 0, 0, 0);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return today >= invalidFromDate;
+        };
+
+        $(document).on('click', '#submit-global-key', async function() {
+            const enteredKey = $('#global-key-input').val().trim();
+            const $msg = $('#global-key-validation-message');
+            if (!enteredKey) { $msg.text('กรุณาป้อน Key Access'); return; }
+            const keyData = pageAccessKeys.find(k => k.KeyAccess.toLowerCase() === enteredKey.toLowerCase());
+            if (keyData) {
+                if (isKeyExpired(keyData.ExpireDate)) { $msg.text('Key Access หมดอายุ รบกวนติดต่อผู้ดูแล'); return; }
+                $msg.text('');
+                sessionStorage.setItem('isAuthorized', 'true');
+                hideModal('access-gate-modal');
+                await loadMainContent();
+            } else { $msg.text('Key Access ไม่ถูกต้อง'); }
+        });
+        $(document).on('keypress', '#global-key-input', e => { if (e.which === 13) $('#submit-global-key').click(); });
+
+        async function loadMainContent() {
+            showLoading();
+            $('#app-header, #app-main, #app-footer').removeClass('hidden');
+            try {
+                const [coursesRes, partsRes, keysRes, resourcesRes] = await Promise.all([
+                    $.ajax({ url: getUrl('courses'), dataType: 'text' }),
+                    $.ajax({ url: getUrl('videoParts'), dataType: 'text' }),
+                    $.ajax({ url: getUrl('keys'), dataType: 'text' }),
+                    $.ajax({ url: getUrl('resources'), dataType: 'text' }).catch(() => null)
+                ]);
+                const rawCourses = parseTSV(coursesRes), allVideoParts = parseTSV(partsRes), rawKeys = parseTSV(keysRes), rawResources = parseTSV(resourcesRes);
+                const resourcesByPartId = rawResources ? rawResources.reduce((acc, res) => { (acc[res.partId] = acc[res.partId] || []).push(res); return acc; }, {}) : {};
+                
+                allKeys = rawKeys.reduce((acc, key) => {
+                    if (key.keyId && key.keyValue) {
+                        if (!acc[key.keyId]) acc[key.keyId] = [];
+                        acc[key.keyId].push({ value: key.keyValue, expireDate: key.ExpireDate || null });
+                    }
+                    return acc;
+                }, {});
+
+                allCourses = rawCourses.map(course => {
+                    const courseVideoParts = allVideoParts.filter(p => p.courseId === course.id).map(p => ({ ...p, title: p.partTitle, resources: resourcesByPartId[p.partId] || [] }));
+                    const firstLockedPart = courseVideoParts.find(p => p.keyId);
+                    return { ...course, videoParts: courseVideoParts, courseKeyId: firstLockedPart ? firstLockedPart.keyId : null };
+                });
+
+                const categories = [...new Set(allCourses.flatMap(c => c.category ? c.category.split(',').map(cat => cat.trim()) : []).filter(Boolean))];
+                const $categoryFilter = $('#category-filter');
+                categories.forEach(category => {
+                    $categoryFilter.append(`<option value="${category}">${category}</option>`);
+                });
+
+                filteredCourses = [...allCourses];
+                renderCourses();
+                $('#course-list-section').css('opacity', 1);
+            } catch (error) {
+                console.error("Error fetching main content:", error);
+                showErrorMessage("ไม่สามารถโหลดข้อมูลหลักสูตรได้");
+            } finally {
+                hideLoading();
+                lucide.createIcons();
+            }
+        }
+        
+        $('#logout-button').on('click', () => { sessionStorage.clear(); localStorage.clear(); location.reload(); });
+
+        // --- Course Rendering, Filtering, Pagination ---
+        function applyFiltersAndRender() {
+            const searchTerm = $('#search-input').val().toLowerCase();
+            const selectedCategory = $('#category-filter').val();
+
+            filteredCourses = allCourses.filter(course => {
+                const matchesSearch = course.title.toLowerCase().includes(searchTerm);
+                const courseCategories = course.category ? course.category.split(',').map(cat => cat.trim()) : [];
+                const matchesCategory = selectedCategory === 'all' || courseCategories.includes(selectedCategory);
+                return matchesSearch && matchesCategory;
+            });
+            currentPage = 1;
+            renderCourses();
+        }
+
+        function renderCourses() {
+            const $container = $('#course-cards-container').empty();
+            if (filteredCourses.length === 0) {
+                $('#no-results-message').removeClass('hidden');
+                $('#pagination-controls').addClass('hidden');
+                $container.removeClass('grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 space-y-3');
+                return;
+            }
+            $('#no-results-message').addClass('hidden');
+            
+            const perPage = itemsPerPage === 'all' ? filteredCourses.length : parseInt(itemsPerPage);
+            const totalPages = Math.ceil(filteredCourses.length / perPage);
+            currentPage = Math.max(1, Math.min(currentPage, totalPages));
+            const paginatedItems = filteredCourses.slice((currentPage - 1) * perPage, currentPage * perPage);
+
+            if (viewType === 'grid') {
+                $container.removeClass('space-y-3').addClass('grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6');
+                paginatedItems.forEach(course => $container.append(createCourseGridCard(course)));
+            } else {
+                $container.removeClass('grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6').addClass('space-y-3');
+                paginatedItems.forEach(course => $container.append(createCourseListCard(course)));
+            }
+            updatePaginationControls(filteredCourses.length, totalPages);
+            lucide.createIcons();
+            updateActiveViewToggle();
+        }
+
+        const createTagsHTML = (categoryString) => {
+            if (!categoryString) return '';
+            const tags = categoryString.split(',').map(tag => tag.trim());
+            return `<div class="flex flex-wrap gap-2 mt-2">${tags.map(tag => `<span class="text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200 px-2.5 py-1 rounded-full">${tag}</span>`).join('')}</div>`;
+        };
+
+        const createCourseGridCard = (course) => `<div class="bg-[var(--card-bg)] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-[var(--border-color)] overflow-hidden group cursor-pointer transform hover:-translate-y-1 flex flex-col" data-course-id="${course.id}">
+            <div class="relative aspect-video overflow-hidden">
+                <img src="${course.youtubeThumbnail || `https://placehold.co/600x400/4f46e5/ffffff?text=${encodeURIComponent(course.title)}`}" alt="${course.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/600x400/334155/F8FAFC?text=Image+Error';"/>
+            </div>
+            <div class="p-4 flex flex-col flex-grow">
+                <h3 class="text-md font-bold mb-1 line-clamp-2 h-12">${course.title}</h3>
+                <p class="text-xs text-[var(--text-secondary)] line-clamp-2 h-8">${course.description || ''}</p>
+                ${createTagsHTML(course.category)}
+                <div class="flex-grow"></div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-[var(--border-color)]">
+                    <div class="flex items-center space-x-2 text-sm font-medium text-[var(--text-secondary)]">
+                        <i data-lucide="${course.courseKeyId ? 'lock' : 'unlock'}" class="w-4 h-4 ${course.courseKeyId ? 'text-amber-500' : 'text-green-500'}"></i>
+                        <span>${course.videoParts.length} บทเรียน</span>
+                    </div>
+                    <div class="text-sm bg-[var(--primary)] text-center text-white font-semibold py-2 px-4 rounded-full group-hover:bg-[var(--primary-hover)] transition-colors">ดูคอร์ส</div>
+                </div>
+            </div>
+        </div>`;
+
+        const createCourseListCard = (course) => `<div class="bg-[var(--card-bg)] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-[var(--border-color)] overflow-hidden group cursor-pointer transform hover:-translate-y-1 flex items-center" data-course-id="${course.id}">
+            <div class="w-28 sm:w-40 flex-shrink-0 aspect-video overflow-hidden">
+                <img src="${course.youtubeThumbnail || `https://placehold.co/400/4f46e5/ffffff?text=${encodeURIComponent(course.title)}`}" alt="${course.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/400/334155/F8FAFC?text=Image+Error';"/>
+            </div>
+            <div class="p-3 flex-grow w-full">
+                <h3 class="text-md font-bold mb-1 line-clamp-1">${course.title}</h3>
+                <p class="text-xs text-[var(--text-secondary)] line-clamp-1">${course.description || ''}</p>
+                ${createTagsHTML(course.category)}
+                <div class="flex justify-between items-center mt-2 pt-2 border-t border-[var(--border-color)]">
+                    <div class="flex items-center space-x-2 text-xs font-medium text-[var(--text-secondary)]">
+                        <i data-lucide="${course.courseKeyId ? 'lock' : 'unlock'}" class="w-3 h-3 ${course.courseKeyId ? 'text-amber-500' : 'text-green-500'}"></i>
+                        <span>${course.videoParts.length} บทเรียน</span>
+                    </div>
+                    <button class="text-xs bg-[var(--primary)] text-center text-white font-semibold py-1.5 px-3 rounded-full group-hover:bg-[var(--primary-hover)] transition-colors">ดูคอร์ส</button>
+                </div>
+            </div>
+        </div>`;
+
+        function updatePaginationControls(totalItems, totalPages) {
+            const $pagination = $('#pagination-controls').empty();
+            if (itemsPerPage === 'all' || totalItems === 0 || totalPages <= 1) return;
+            $pagination.html(`<button id="prev-page" class="px-4 py-2 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--primary)] hover:text-white transition-all">&lt; ก่อนหน้า</button><span id="page-info" class="text-sm font-medium">หน้า ${currentPage} จาก ${totalPages}</span><button id="next-page" class="px-4 py-2 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[var(--primary)] hover:text-white transition-all">ต่อไป &gt;</button>`);
+            $('#prev-page').prop('disabled', currentPage === 1);
+            $('#next-page').prop('disabled', currentPage === totalPages);
+        }
+        
+        function updateActiveViewToggle() {
+            $('.view-toggle').removeClass('bg-[var(--primary)] text-white shadow-sm').addClass('text-slate-500');
+            $(`.view-toggle[data-view="${viewType}"]`).addClass('bg-[var(--primary)] text-white shadow-sm').removeClass('text-slate-500');
+        }
+
+        $('#search-input').on('keyup', applyFiltersAndRender);
+        $('#category-filter').on('change', applyFiltersAndRender);
+        $('#items-per-page').on('change', function() { itemsPerPage = $(this).val(); currentPage = 1; renderCourses(); });
+        $('.view-toggle').on('click', function() { viewType = $(this).data('view'); localStorage.setItem('viewType', viewType); renderCourses(); });
+        $(document).on('click', '#prev-page', () => { if (currentPage > 1) { currentPage--; renderCourses(); } });
+        $(document).on('click', '#next-page', () => { const totalPages = Math.ceil(filteredCourses.length / parseInt(itemsPerPage)); if (currentPage < totalPages) { currentPage++; renderCourses(); } });
+
+        // --- Course Detail & Progress Tracking ---
+        $(document).on('click', '[data-course-id]', function() { selectedCourseData = allCourses.find(c => c.id === $(this).data('course-id').toString()); if (selectedCourseData) showCourseDetail(selectedCourseData); });
+
+        function showCourseDetail(course) {
+            $('#course-list-section').css('opacity', 0).addClass('hidden');
+            $('#course-detail-section').removeClass('hidden').css('opacity', 1);
+            window.scrollTo(0, 0);
+            $('#course-detail-title').text(course.title);
+            $('#course-detail-description').text(course.description);
+            renderVideoPartsList(course);
+            updateProgress(course.id);
+            if (youtubePlayer) { youtubePlayer.destroy(); youtubePlayer = null; }
+            $('#youtube-player-container').empty();
+            $('#player-placeholder').show();
+        }
+        
+        const getProgress = (courseId) => JSON.parse(localStorage.getItem(`progress_${courseId}`) || '[]');
+        function saveProgress(courseId, partId) {
+            let progress = getProgress(courseId);
+            if (!progress.includes(partId)) {
+                progress.push(partId);
+                localStorage.setItem(`progress_${courseId}`, JSON.stringify(progress));
+            }
+            updateProgress(courseId);
+        }
+        function updateProgress(courseId) {
+            if (!selectedCourseData || selectedCourseData.id !== courseId) return;
+            const progress = getProgress(courseId);
+            const totalParts = selectedCourseData.videoParts.length;
+            if (totalParts === 0) { $('#progress-container').hide(); return; }
+            const percentage = Math.round((progress.length / totalParts) * 100);
+            $('#progress-container').show();
+            $('#progress-bar').css('width', `${percentage}%`);
+            $('#progress-text').text(`${percentage}%`);
+        }
+        
+        const getIconForResourceType = (type) => ({ file: 'file-text', quiz: 'clipboard-check', link: 'link' }[type?.toLowerCase()] || 'paperclip');
+
+        function renderVideoPartsList(course) {
+            const $container = $('#video-parts-container').empty();
+            const unlocked = !course.courseKeyId || localStorage.getItem(`unlocked_course_${course.id}`) === 'true';
+
+            const groupedByChapter = course.videoParts.reduce((acc, part, index) => {
+                const chapter = part.chapter || 'บทเรียนทั่วไป';
+                if (!acc[chapter]) {
+                    acc[chapter] = [];
+                }
+                acc[chapter].push({ ...part, originalIndex: index });
+                return acc;
+            }, {});
+
+            if (Object.keys(groupedByChapter).length > 0) {
+                for (const chapter in groupedByChapter) {
+                    const parts = groupedByChapter[chapter];
+                    
+                    let partsHTML = '<ul class="space-y-1">';
+                    parts.forEach(part => {
+                        const isLocked = part.keyId && !unlocked;
+                        const hasResources = part.resources && part.resources.length > 0;
+                        const resourcesHTML = hasResources && unlocked ? `<div class="resource-list hidden pl-12 pr-4 pb-3 pt-2"><ul class="space-y-2 border-t border-[var(--border-color)] pt-3">${part.resources.map(res => `<li><a href="${res.resourceUrl}" target="_blank" rel="noopener noreferrer" class="flex items-center text-indigo-600 dark:text-indigo-400 hover:underline text-sm"><i data-lucide="${getIconForResourceType(res.resourceType)}" class="w-4 h-4 mr-2"></i><span>${res.resourceTitle}</span></a></li>`).join('')}</ul></div>` : '';
+                        const resourceBtn = hasResources && unlocked ? `<button class="resource-toggle p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-600"><i data-lucide="paperclip" class="w-5 h-5 text-slate-500"></i></button>` : '';
+                        partsHTML += `<li class="overflow-hidden" data-part-index="${part.originalIndex}">
+                            <div class="video-trigger flex items-center justify-between cursor-pointer p-3 rounded-lg custom-subtle-hover transition-colors duration-200">
+                                <div class="flex items-center min-w-0">
+                                    <span class="lesson-number bg-slate-100 dark:bg-slate-700/50 text-slate-700 dark:text-slate-200 rounded-md h-8 w-8 flex items-center justify-center font-bold text-xs mr-3 flex-shrink-0">${part.originalIndex + 1}</span>
+                                    <span class="font-medium truncate">${part.title}</span>
+                                </div>
+                                <div class="flex items-center space-x-1">${resourceBtn}<i data-lucide="${isLocked ? 'lock' : 'play-circle'}" class="${isLocked ? 'text-amber-500' : 'text-[var(--primary)]'} w-6 h-6"></i></div>
+                            </div>
+                            ${resourcesHTML}
+                        </li>`;
+                    });
+                    partsHTML += '</ul>';
+
+                    const chapterHTML = `
+                        <details class="chapter-accordion bg-[var(--card-bg)] rounded-xl border border-[var(--border-color)] overflow-hidden" open>
+                            <summary class="p-4 font-bold text-lg flex justify-between items-center custom-subtle-hover transition-colors duration-200">
+                                <span>${chapter}</span>
+                                <i data-lucide="chevron-right" class="chapter-arrow w-5 h-5 text-[var(--text-secondary)]"></i>
+                            </summary>
+                            <div class="p-2 border-t border-[var(--border-color)]">
+                                ${partsHTML}
+                            </div>
+                        </details>
+                    `;
+                    $container.append(chapterHTML);
+                }
+                lucide.createIcons();
+            } else {
+                $container.append('<p class="text-center text-[var(--text-secondary)]">ไม่มีบทเรียนสำหรับหลักสูตรนี้</p>');
+            }
+        }
+
+
+        $('#back-to-courses, #home-button').on('click', () => {
+            $('#course-detail-section').css('opacity', 0).addClass('hidden');
+            $('#course-list-section').removeClass('hidden').css('opacity', 1);
+            if (youtubePlayer) { youtubePlayer.destroy(); youtubePlayer = null; }
+            $('#youtube-player-container').empty();
+            $('#player-placeholder').show();
+            selectedCourseData = null; currentPlayingIndex = -1;
+        });
+        
+        $(document).on('click', '.video-trigger', function() {
+            const partIndex = $(this).closest('li').data('part-index');
+            currentVideoPartToPlay = selectedCourseData.videoParts[partIndex];
+            const unlocked = !selectedCourseData.courseKeyId || localStorage.getItem(`unlocked_course_${selectedCourseData.id}`) === 'true';
+            if (unlocked) {
+                playYouTubeVideo(currentVideoPartToPlay.videoId, partIndex);
+            } else {
+                const modalContent = `<div class="bg-[var(--card-bg)] rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-md border border-[var(--border-color)] transform transition-all duration-300 scale-95 opacity-0" id="key-modal-content"><h3 class="text-2xl font-bold mb-2">ต้องการคีย์สำหรับหลักสูตรนี้</h3><p class="text-[var(--text-secondary)] mb-6">โปรดป้อนคีย์เพื่อปลดล็อกวิดีโอทั้งหมด</p><input type="password" id="key-input" class="w-full p-3 border border-[var(--border-color)] rounded-lg mb-2 bg-[var(--input-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" placeholder="คีย์การเข้าถึงหลักสูตร" /><p id="key-validation-message" class="text-red-500 text-sm mb-4 h-5"></p><div class="flex justify-end space-x-3"><button id="cancel-key-input" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full font-semibold transition-all shadow-lg shadow-red-500/30">ยกเลิก</button><button id="submit-key-input" class="px-5 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-full font-semibold transition-all shadow-lg shadow-indigo-500/30">ยืนยัน</button></div></div>`;
+                showModal('key-modal', modalContent);
+            }
+        });
+
+        $(document).on('click', '.resource-toggle', function(e) { e.stopPropagation(); $(this).closest('li').find('.resource-list').slideToggle(200); $(this).toggleClass('bg-slate-300 dark:bg-slate-600'); });
+
+        $(document).on('click', '#submit-key-input', function() {
+            const enteredKey = $('#key-input').val().trim();
+            const $msg = $('#key-validation-message');
+            if (!enteredKey) { $msg.text('กรุณาป้อนคีย์'); return; }
+            if (!selectedCourseData) { $msg.text('เกิดข้อผิดพลาด: ไม่ได้เลือกหลักสูตร'); return; }
+            
+            const courseKeys = allKeys[selectedCourseData.courseKeyId];
+            if (!courseKeys || courseKeys.length === 0) {
+                $msg.text('ไม่พบข้อมูลคีย์สำหรับหลักสูตรนี้');
+                showMessageBox('ไม่พบข้อมูลคีย์', 'error');
+                return;
+            }
+
+            const validKeyData = courseKeys.find(key => key.value.toLowerCase() === enteredKey.toLowerCase());
+
+            if (validKeyData) {
+                if (isKeyExpired(validKeyData.expireDate)) {
+                    $msg.text('Key หมดอายุแล้ว');
+                    showMessageBox('Key หมดอายุแล้ว', 'error');
+                } else {
+                    localStorage.setItem(`unlocked_course_${selectedCourseData.id}`, 'true');
+                    $msg.text('');
+                    hideModal('key-modal');
+                    showMessageBox('ปลดล็อกหลักสูตรสำเร็จ!', 'success');
+                    renderVideoPartsList(selectedCourseData);
+                    if (currentVideoPartToPlay) {
+                        const partIndex = selectedCourseData.videoParts.indexOf(currentVideoPartToPlay);
+                        playYouTubeVideo(currentVideoPartToPlay.videoId, partIndex);
+                    }
+                }
+            } else {
+                $msg.text('คีย์ไม่ถูกต้อง');
+                showMessageBox('คีย์ไม่ถูกต้อง', 'error');
+            }
+        });
+        
+        $(document).on('keypress', '#key-input', e => { if (e.which === 13) $('#submit-key-input').click(); });
+        $(document).on('click', '#cancel-key-input', () => hideModal('key-modal'));
+
+        // --- YouTube Player ---
+        function playYouTubeVideo(videoId, partIndex) {
+            // MODIFIED: If API is not ready, queue the video and show a friendly message.
+            if (!isYouTubeApiReady) { 
+                showMessageBox('กำลังเตรียมโปรแกรมเล่นวิดีโอ...', 'success'); 
+                queuedVideo = { videoId, partIndex };
+                return; 
+            }
+            currentPlayingIndex = partIndex;
+            updatePlayingHighlight();
+            $('#player-placeholder').hide();
+            if (!youtubePlayer) {
+                youtubePlayer = new YT.Player('youtube-player-container', { videoId: videoId, playerVars: { 'autoplay': 1, 'controls': 1, 'modestbranding': 1, 'rel': 0, 'showinfo': 0, 'fs': 1, 'iv_load_policy': 3 }, events: { 'onStateChange': onPlayerStateChange } });
+            } else { youtubePlayer.loadVideoById(videoId); }
+        }
+        
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                const part = selectedCourseData.videoParts[currentPlayingIndex];
+                if (part) saveProgress(selectedCourseData.id, part.partId);
+                const nextIndex = currentPlayingIndex + 1;
+                if (nextIndex < selectedCourseData.videoParts.length) {
+                    const nextVideo = selectedCourseData.videoParts[nextIndex];
+                    showMessageBox(`กำลังเล่นพาร์ทต่อไป: ${nextVideo.title}`);
+                    playYouTubeVideo(nextVideo.videoId, nextIndex);
+                } else {
+                    showMessageBox('คุณดูครบทุกพาร์ทแล้ว!', 'success');
+                    currentPlayingIndex = -1;
+                    updatePlayingHighlight();
+                }
+            }
+        }
+        
+        function updatePlayingHighlight() {
+            $('#video-parts-container li').removeClass('playing');
+            if (currentPlayingIndex > -1) {
+                const $item = $(`#video-parts-container li[data-part-index="${currentPlayingIndex}"]`).addClass('playing');
+                $item[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        $(document).ready(() => { startApp(); lucide.createIcons(); });
+    </script>
+</body>
+</html>
