@@ -18,7 +18,6 @@
         :root {
             --background: #f8fafc;      /* slate-50 */
             --text-primary: #575e69;     /* slate-800 */
-            /* --text-primary: #1e293b;     slate-800 */
             --text-secondary: #64748b;   /* slate-500 */
             --card-bg: #ffffff;          /* white */
             --border-color: #e2e8f0;     /* slate-200 */
@@ -105,7 +104,7 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* NEW: Custom Searchable Dropdown */
+        /* Custom Searchable Dropdown */
         .custom-dropdown-container {
             min-width: 150px;
         }
@@ -216,7 +215,7 @@
             background-color: var(--subtle-hover-bg);
         }
 
-        /* REVISED: Resource Button Styling */
+        /* Resource Button Styling */
         .resource-toggle {
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
@@ -224,22 +223,19 @@
             transition: all 0.2s ease-in-out;
             box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         }
-        /* Light mode hover/focus */
         .resource-toggle:hover, .resource-toggle:focus-visible {
             background-color: var(--subtle-hover-bg);
             border-color: var(--primary);
             color: var(--primary);
             transform: translateY(-2px);
             box-shadow: 0 4px 10px 0 rgb(79 70 229 / 20%);
-            outline: none; /* for focus-visible */
+            outline: none;
         }
-        /* Dark mode hover/focus */
         html.dark .resource-toggle:hover, html.dark .resource-toggle:focus-visible {
-            background-color: #334155; /* slate-700 */
-            border-color: #818cf8; /* indigo-400 */
-            color: #818cf8; /* indigo-400 */
+            background-color: #334155;
+            border-color: #818cf8;
+            color: #818cf8;
         }
-        /* Active state for both modes */
         .resource-toggle.active {
             background-color: var(--accent);
             border-color: var(--accent);
@@ -247,14 +243,13 @@
             transform: translateY(0);
             box-shadow: 0 4px 14px 0 rgb(79 70 229 / 39%);
         }
-        /* Dark mode active state override */
         html.dark .resource-toggle.active {
             background-color: var(--accent);
             color: white;
             box-shadow: 0 4px 14px 0 rgb(79 70 229 / 30%);
         }
 
-        /* NEW: Animated Progress Bar */
+        /* Animated Progress Bar */
         .progress-bar-container {
             overflow: hidden;
             border-radius: 9999px;
@@ -348,17 +343,18 @@
                 <p class="text-lg text-[var(--text-secondary)]">เลือกหลักสูตรที่คุณสนใจเพื่อเริ่มเรียนรู้ได้เลย</p>
             </div>
 
-            <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 p-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--border-color)] shadow-sm">
-                <div class="relative w-full md:max-w-md">
+            <!-- UPDATED: Responsive Filter Bar -->
+            <div class="flex flex-wrap md:flex-wrap-reverse justify-between items-center mb-8 lg:space-x-2  p-4 bg-[var(--card-bg)] rounded-2xl border border-[var(--border-color)] shadow-sm">
+                <label class="font-medium sm:block text-[var(--text-secondary)]">แสดง:</label>
+                <div class="relative w-full md:w-auto md:flex-grow mb-4 md:mb-0">
                     <input type="text" id="search-input" placeholder="ค้นหาหลักสูตร..." class="w-full p-3 pl-10 rounded-full border border-[var(--border-color)] bg-[var(--input-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all" />
                     <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5"></i>
                 </div>
-                <div class="flex items-center space-x-4 text-sm flex-wrap gap-y-2 justify-center">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 text-sm w-full md:w-auto">
                     
-                    <!-- NEW Custom Dropdown for Category -->
-                    <div class="flex items-center space-x-2">
-                        <label class="font-medium hidden sm:block text-[var(--text-secondary)]">หมวดหมู่:</label>
-                        <div id="custom-category-filter" class="relative custom-dropdown-container w-48">
+                    <div class="flex flex-wrap md:flex-wrap-reverse items-center lg:space-x-2 sm:space-x-0 w-full sm:w-auto">
+                        <label class="font-medium sm:block text-[var(--text-secondary)]">หมวดหมู่:</label>
+                        <div id="custom-category-filter" class="relative custom-dropdown-container w-full sm:w-48">
                             <button class="custom-select-trigger">
                                 <span class="truncate">ทั้งหมด</span>
                                 <i data-lucide="chevrons-up-down" class="ml-2"></i>
@@ -368,33 +364,31 @@
                                     <input type="text" class="custom-dropdown-search" placeholder="ค้นหาหมวดหมู่...">
                                 </div>
                                 <ul class="custom-dropdown-options">
-                                    <!-- Options populated by JS -->
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    <!-- NEW Custom Dropdown for Items Per Page -->
-                    <div class="flex items-center space-x-2">
-                        <label class="font-medium hidden sm:block text-[var(--text-secondary)]">แสดง:</label>
-                        <div id="custom-items-per-page" class="relative custom-dropdown-container w-28">
+                    <div class="flex flex-wrap md:flex-wrap-reverse items-center lg:space-x-2 sm:space-x-0 w-full sm:w-auto">
+                        <label class="font-medium sm:block text-[var(--text-secondary)]">แสดง:</label>
+                        <div id="custom-items-per-page" class="relative custom-dropdown-container w-full sm:w-28">
                             <button class="custom-select-trigger">
-                                <span class="truncate">6</span>
+                                <span class="truncate">ทั้งหมด</span>
                                 <i data-lucide="chevrons-up-down" class="ml-2"></i>
                             </button>
                             <div class="custom-dropdown-panel hidden">
                                 <ul class="custom-dropdown-options">
+                                    <li data-value="all">ทั้งหมด</li>
                                     <li data-value="6">6</li>
                                     <li data-value="9">9</li>
                                     <li data-value="12">12</li>
-                                    <li data-value="all">ทั้งหมด</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex items-center space-x-2">
-                        <label class="font-medium hidden sm:block text-[var(--text-secondary)]">มุมมอง:</label>
+                    <div class="flex flex-wrap md:flex-wrap-reverse items-center lg:space-x-2 sm:space-x-0 w-full sm:w-auto justify-center">
+                        <label class="font-medium sm:block text-[var(--text-secondary)] mr-1 ">มุมมอง:</label>
                         <div class="flex items-center bg-[var(--input-bg)] p-1 rounded-full border border-[var(--border-color)]">
                             <button class="view-toggle p-2 rounded-full" data-view="grid"><i data-lucide="layout-grid" class="w-5 h-5"></i></button>
                             <button class="view-toggle p-2 rounded-full" data-view="list"><i data-lucide="list" class="w-5 h-5"></i></button>
@@ -415,7 +409,6 @@
                 <div class="lg:col-span-2 space-y-6">
                     <div class="video-aspect-ratio bg-black flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl shadow-slate-900/10 dark:shadow-black/30">
                         <div id="player-placeholder" class="player-placeholder text-white text-center text-xl p-4 flex flex-col items-center justify-center"><i data-lucide="play-circle" class="w-16 h-16 mb-4 opacity-50"></i><span class="font-medium">เลือกวิดีโอเพื่อเริ่มต้น</span></div>
-                        <!-- NEW Placeholder for resource-only parts -->
                         <div id="resource-placeholder" class="hidden player-placeholder bg-[var(--card-bg)] text-[var(--text-primary)] text-center text-xl p-4 flex-col items-center justify-center">
                             <i data-lucide="file-text" class="w-16 h-16 mb-4 text-[var(--text-secondary)]"></i>
                             <span class="font-semibold">เนื้อหาบทนี้สำหรับดูได้จากเอกสารประกอบ</span>
@@ -477,19 +470,23 @@
         };
         $('#currentYear').text(`2025 - ${new Date().getFullYear()}`);
 
-        // --- URL Obfuscation ---
+        // --- URL Obfuscation (ASCII Encoding) ---
+        // UPDATED: Now uses arrays of numbers
+        const decode = (encodedArray) => encodedArray.map(code => String.fromCharCode(code)).join('');
+
         const encodedUrls = {
-            pageAccess: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTQ5MTc1NzI1MQ==',
-            courses: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MA==',
-            videoParts: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTE1MzMxMDQ5Mg==',
-            keys: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTUzMDg3ODk0OQ==',
-            resources: 'aHR0cHM6Ly9kb2NzLmdvb2dsZS5jb20vc3ByZWFkc2hlZXRzL2QvZS8yUEFDWC0xdlR1ZFhXdWdtS3F1Sl95MXhUN01GMS1NbnluUWZmZlFIdjFpM1RBZy1qZDN6bEU2TEhrQnUtbVdtbjMzd1gxczhFYUo5cmRvdHUzNUxyNy9wdWI/b3V0cHV0PXRzdiZnaWQ9MTczMzIxNjAwOQ=='
+            pageAccess: [104,116,116,112,115,58,47,47,100,111,99,115,46,103,111,111,103,108,101,46,99,111,109,47,115,112,114,101,97,100,115,104,101,101,116,115,47,100,47,101,47,50,80,65,67,88,45,49,118,84,117,100,88,87,117,103,109,75,113,117,74,95,121,49,120,84,55,77,70,49,45,77,110,121,110,81,102,102,102,81,72,118,49,105,51,84,65,103,45,106,100,51,122,108,69,54,76,72,107,66,117,45,109,87,109,110,51,51,119,88,49,115,56,69,97,74,57,114,100,111,116,117,51,53,76,114,55,47,112,117,98,63,111,117,116,112,117,116,61,116,115,118,38,103,105,100,61,49,52,57,49,55,53,55,50,53,49],
+            courses: [104,116,116,112,115,58,47,47,100,111,99,115,46,103,111,111,103,108,101,46,99,111,109,47,115,112,114,101,97,100,115,104,101,101,116,115,47,100,47,101,47,50,80,65,67,88,45,49,118,84,117,100,88,87,117,103,109,75,113,117,74,95,121,49,120,84,55,77,70,49,45,77,110,121,110,81,102,102,102,81,72,118,49,105,51,84,65,103,45,106,100,51,122,108,69,54,76,72,107,66,117,45,109,87,109,110,51,51,119,88,49,115,56,69,97,74,57,114,100,111,116,117,51,53,76,114,55,47,112,117,98,63,111,117,116,112,117,116,61,116,115,118,38,103,105,100,61,48],
+            videoParts: [104,116,116,112,115,58,47,47,100,111,99,115,46,103,111,111,103,108,101,46,99,111,109,47,115,112,114,101,97,100,115,104,101,101,116,115,47,100,47,101,47,50,80,65,67,88,45,49,118,84,117,100,88,87,117,103,109,75,113,117,74,95,121,49,120,84,55,77,70,49,45,77,110,121,110,81,102,102,102,81,72,118,49,105,51,84,65,103,45,106,100,51,122,108,69,54,76,72,107,66,117,45,109,87,109,110,51,51,119,88,49,115,56,69,97,74,57,114,100,111,116,117,51,53,76,114,55,47,112,117,98,63,111,117,116,112,117,116,61,116,115,118,38,103,105,100,61,49,49,53,51,51,49,48,52,57,50],
+            keys: [104,116,116,112,115,58,47,47,100,111,99,115,46,103,111,111,103,108,101,46,99,111,109,47,115,112,114,101,97,100,115,104,101,101,116,115,47,100,47,101,47,50,80,65,67,88,45,49,118,84,117,100,88,87,117,103,109,75,113,117,74,95,121,49,120,84,55,77,70,49,45,77,110,121,110,81,102,102,102,81,72,118,49,105,51,84,65,103,45,106,100,51,122,108,69,54,76,72,107,66,117,45,109,87,109,110,51,51,119,88,49,115,56,69,97,74,57,114,100,111,116,117,51,53,76,114,55,47,112,117,98,63,111,117,116,112,117,116,61,116,115,118,38,103,105,100,61,49,53,51,48,56,55,56,57,52,57],
+            resources: [104,116,116,112,115,58,47,47,100,111,99,115,46,103,111,111,103,108,101,46,99,111,109,47,115,112,114,101,97,100,115,104,101,101,116,115,47,100,47,101,47,50,80,65,67,88,45,49,118,84,117,100,88,87,117,103,109,75,113,117,74,95,121,49,120,84,55,77,70,49,45,77,110,121,110,81,102,102,102,81,72,118,49,105,51,84,65,103,45,106,100,51,122,108,69,54,76,72,107,66,117,45,109,87,109,110,51,51,119,88,49,115,56,69,97,74,57,114,100,111,116,117,51,53,76,114,55,47,112,117,98,63,111,117,116,112,117,116,61,116,115,118,38,103,105,100,61,49,55,51,51,50,49,54,48,48,57]
         };
 
-        const getUrl = (key) => atob(encodedUrls[key]);
+        const getUrl = (key) => decode(encodedUrls[key]);
 
         let allCourses = [], filteredCourses = [], allKeys = {}, pageAccessKeys = [];
-        let selectedCourseData = null, currentPlayingIndex = -1, currentPage = 1, itemsPerPage = 6, viewType = 'grid';
+        // [FIXED] Default itemsPerPage to 'all'
+        let selectedCourseData = null, currentPlayingIndex = -1, currentPage = 1, itemsPerPage = 'all', viewType = 'grid';
         let currentVideoPartToPlay = null;
 
         // --- Utility & UI Functions ---
@@ -635,9 +632,10 @@
                     $categoryOptions.append(`<li data-value="${category}">${category}</li>`);
                 });
                 
-                $('#custom-items-per-page').data('value', '6');
-                $('#custom-items-per-page .custom-select-trigger span').text('6');
-                $('#custom-items-per-page .custom-dropdown-options li[data-value="6"]').addClass('selected');
+                // [FIXED] Set default dropdown value to 'all'
+                $('#custom-items-per-page').data('value', 'all');
+                $('#custom-items-per-page .custom-select-trigger span').text('ทั้งหมด');
+                $('#custom-items-per-page .custom-dropdown-options li[data-value="all"]').addClass('selected');
 
                 filteredCourses = [...allCourses];
                 renderCourses();
@@ -696,7 +694,8 @@
                 if (containerId === 'custom-category-filter') {
                     applyFiltersAndRender();
                 } else if (containerId === 'custom-items-per-page') {
-                    itemsPerPage = value;
+                    // [FIXED] Ensure value is a string for consistent comparison
+                    itemsPerPage = value.toString();
                     currentPage = 1;
                     renderCourses();
                 }
@@ -741,7 +740,8 @@
             const perPage = itemsPerPage === 'all' ? filteredCourses.length : parseInt(itemsPerPage);
             const totalPages = Math.ceil(filteredCourses.length / perPage);
             currentPage = Math.max(1, Math.min(currentPage, totalPages));
-            const paginatedItems = filteredCourses.slice((currentPage - 1) * perPage, currentPage * perPage);
+            const paginatedItems = itemsPerPage === 'all' ? filteredCourses : filteredCourses.slice((currentPage - 1) * perPage, currentPage * perPage);
+
 
             if (viewType === 'grid') {
                 $container.removeClass('space-y-3').addClass('grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6');
@@ -755,7 +755,8 @@
             updateActiveViewToggle();
         }
 
-        const getTagColorClasses = (tagName) => {
+        // UPDATED: Tag color logic
+        const getTagColorClasses = (index) => {
             const colors = [
                 { light: 'bg-blue-100 text-blue-800', dark: 'dark:bg-blue-900 dark:text-blue-200' },
                 { light: 'bg-green-100 text-green-800', dark: 'dark:bg-green-900 dark:text-green-200' },
@@ -770,26 +771,20 @@
                 { light: 'bg-cyan-100 text-cyan-800', dark: 'dark:bg-cyan-900 dark:text-cyan-200' },
                 { light: 'bg-fuchsia-100 text-fuchsia-800', dark: 'dark:bg-fuchsia-900 dark:text-fuchsia-200' }
             ];
-            let hash = 0;
-            if (tagName.length === 0) return colors[0];
-            for (let i = 0; i < tagName.length; i++) {
-                hash = tagName.charCodeAt(i) + ((hash << 5) - hash);
-                hash = hash & hash; 
-            }
-            const index = Math.abs(hash % colors.length);
-            const color = colors[index];
+            const color = colors[index % colors.length];
             return `${color.light} ${color.dark}`;
         };
 
         const createTagsHTML = (categoryString) => {
             if (!categoryString) return '';
             const tags = categoryString.split(',').map(tag => tag.trim());
-            return `<div class="flex flex-wrap gap-2 mt-2">${tags.map(tag => `<span class="text-xs font-medium ${getTagColorClasses(tag)} px-2.5 py-1 rounded-full">${tag}</span>`).join('')}</div>`;
+            return `<div class="flex flex-wrap gap-2 mt-2">${tags.map((tag, index) => `<span class="text-xs font-medium ${getTagColorClasses(index)} px-2.5 py-1 rounded-full">${tag}</span>`).join('')}</div>`;
         };
-
+        
+        // [FIXED] Increased button size
         const createCourseGridCard = (course) => `<div class="bg-[var(--card-bg)] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-[var(--border-color)] overflow-hidden group cursor-pointer transform hover:-translate-y-1 flex flex-col" data-course-id="${course.id}">
-            <div class="relative overflow-hidden h-80">
-                <img src="${course.youtubeThumbnail || `https://placehold.co/600x400/4f46e5/ffffff?text=${encodeURIComponent(course.title)}`}" alt="${course.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/600x400/334155/F8FAFC?text=Image+Error';"/>
+            <div class="relative overflow-hidden aspect-video bg-slate-200 dark:bg-slate-700">
+                <img src="${course.youtubeThumbnail || `https://placehold.co/600x400/4f46e5/ffffff?text=${encodeURIComponent(course.title)}`}" alt="${course.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/600x400/334155/F8FAFC?text=Image+Error';"/>
             </div>
             <div class="p-4 flex flex-col flex-grow">
                 <h3 class="text-md font-bold mb-1 line-clamp-2 h-12">${course.title}</h3>
@@ -801,16 +796,17 @@
                         <i data-lucide="${course.courseKeyId ? 'lock' : 'unlock'}" class="w-4 h-4 ${course.courseKeyId ? 'text-amber-500' : 'text-green-500'}"></i>
                         <span>${course.videoParts.length} บทเรียน</span>
                     </div>
-                    <div class="text-sm bg-[var(--primary)] text-center text-white font-semibold py-2 px-4 rounded-full group-hover:bg-[var(--primary-hover)] transition-colors">ดูคอร์ส</div>
+                    <div class="text-base bg-[var(--primary)] text-center text-white font-semibold py-2.5 px-6 rounded-full group-hover:bg-[var(--primary-hover)] transition-colors">ดูคอร์ส</div>
                 </div>
             </div>
         </div>`;
 
-        const createCourseListCard = (course) => `<div class="bg-[var(--card-bg)] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-[var(--border-color)] overflow-hidden group cursor-pointer transform hover:-translate-y-1 flex items-center" data-course-id="${course.id}">
-            <div class="w-28 sm:w-40 flex-shrink-0 overflow-hidden">
-                <img src="${course.youtubeThumbnail || `https://placehold.co/400/4f46e5/ffffff?text=${encodeURIComponent(course.title)}`}" alt="${course.title}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/400/334155/F8FAFC?text=Image+Error';"/>
+        // [FIXED] Increased button size
+        const createCourseListCard = (course) => `<div class="bg-[var(--card-bg)] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-[var(--border-color)] overflow-hidden group cursor-pointer transform hover:-translate-y-1 flex items-center gap-4" data-course-id="${course.id}">
+            <div class="w-32 sm:w-40 h-full flex-shrink-0 flex items-center justify-center overflow-hidden bg-slate-200 dark:bg-slate-700">
+                <img src="${course.youtubeThumbnail || `https://placehold.co/400/222/ffffff?text=${encodeURIComponent(course.title)}`}" alt="${course.title}" class="max-w-full max-h-full object-contain transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/400/334155/F8FAFC?text=Image+Error';"/>
             </div>
-            <div class="p-3 flex-grow w-full">
+            <div class="p-3 flex-grow">
                 <h3 class="text-md font-bold mb-1 line-clamp-1">${course.title}</h3>
                 <p class="text-xs text-[var(--text-secondary)] line-clamp-1">${course.description || ''}</p>
                 ${createTagsHTML(course.category)}
@@ -819,7 +815,7 @@
                         <i data-lucide="${course.courseKeyId ? 'lock' : 'unlock'}" class="w-3 h-3 ${course.courseKeyId ? 'text-amber-500' : 'text-green-500'}"></i>
                         <span>${course.videoParts.length} บทเรียน</span>
                     </div>
-                    <button class="text-xs bg-[var(--primary)] text-center text-white font-semibold py-1.5 px-3 rounded-full group-hover:bg-[var(--primary-hover)] transition-colors">ดูคอร์ส</button>
+                    <button class="text-sm bg-[var(--primary)] text-center text-white font-semibold py-2 px-4 rounded-full group-hover:bg-[var(--primary-hover)] transition-colors">ดูคอร์ส</button>
                 </div>
             </div>
         </div>`;
@@ -844,7 +840,17 @@
         $('#search-input').on('keyup', applyFiltersAndRender);
         $('.view-toggle').on('click', function() { viewType = $(this).data('view'); localStorage.setItem('viewType', viewType); renderCourses(); });
         $(document).on('click', '#prev-page', () => { if (currentPage > 1) { currentPage--; renderCourses(); } });
-        $(document).on('click', '#next-page', () => { const totalPages = Math.ceil(filteredCourses.length / parseInt(itemsPerPage)); if (currentPage < totalPages) { currentPage++; renderCourses(); } });
+        
+        // [FIXED] Correctly calculate totalPages for next-page button
+        $(document).on('click', '#next-page', () => { 
+            const perPage = itemsPerPage === 'all' ? filteredCourses.length : parseInt(itemsPerPage, 10);
+            if (!perPage) return; // Guard against 0 or NaN
+            const totalPages = Math.ceil(filteredCourses.length / perPage);
+            if (currentPage < totalPages) { 
+                currentPage++; 
+                renderCourses(); 
+            } 
+        });
 
         // --- Course Detail & Progress Tracking ---
         $(document).on('click', '[data-course-id]', function() { selectedCourseData = allCourses.find(c => c.id === $(this).data('course-id').toString()); if (selectedCourseData) showCourseDetail(selectedCourseData); });
@@ -928,12 +934,8 @@
                         const hasResources = part.resources && part.resources.length > 0;
                         const isCompleted = progress.includes(part.originalIndex);
                         
-                        // REVISED LOGIC FOR RESOURCE BUTTON: The button should show if there are resources AND the specific part isn't locked.
-                        // A part is considered "not locked" if it has NO keyId OR if the overall course is unlocked.
                         const canShowResources = hasResources && (!part.keyId || unlocked);
-
                         const resourcesHTML = canShowResources ? `<div class="resource-list hidden pl-12 pr-4 pb-3 pt-2"><ul class="space-y-2 border-t border-[var(--border-color)] pt-3 ">${part.resources.map(res => `<li><a href="${res.resourceUrl}" target="_blank" rel="noopener noreferrer" class="flex items-center  hover:underline text-sm"><i data-lucide="${getIconForResourceType(res.resourceType)}" class="w-4 h-4 mr-2"></i><span>${res.resourceTitle}</span></a></li>`).join('')}</ul></div>` : '';
-                        
                         const resourceBtn = canShowResources ? `<button class="resource-toggle p-2 rounded-full"><i data-lucide="paperclip" class="w-5 h-5"></i></button>` : '';
                         
                         let actionIcon = '';
@@ -989,7 +991,6 @@
             }
         }
 
-
         $('#back-to-courses, #home-button').on('click', () => {
             $('#course-detail-section').css('opacity', 0).addClass('hidden');
             $('#course-list-section').removeClass('hidden').css('opacity', 1);
@@ -999,18 +1000,12 @@
             selectedCourseData = null; currentPlayingIndex = -1;
         });
         
-        // --- MODIFIED LOGIC ---
         $(document).on('click', '.video-trigger', function() {
             const partIndex = $(this).closest('li').data('part-index');
             if (partIndex === undefined || !selectedCourseData) return;
 
             const part = selectedCourseData.videoParts[partIndex];
-            currentVideoPartToPlay = part; // Keep track for key submission
-
-            // --- DEBUGGING CONSOLE LOG ---
-            // This will print the data for the clicked lesson to the browser's developer console (F12).
-            // It helps you verify if 'videoId' and 'resources' are coming correctly from your Google Sheet.
-            console.log("Clicked Part Data:", part);
+            currentVideoPartToPlay = part;
 
             const courseIsUnlocked = !selectedCourseData.courseKeyId || localStorage.getItem(`unlocked_course_${selectedCourseData.id}`) === 'true';
             const partIsAccessible = !part.keyId || courseIsUnlocked;
@@ -1018,7 +1013,6 @@
             if (partIsAccessible) {
                 playYouTubeVideo(part.videoId, partIndex, true);
             } else {
-                // If the part is not accessible (it has a key and the course is locked), show the modal to enter the key
                 const modalContent = `<div class="bg-[var(--card-bg)] rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-md border border-[var(--border-color)] transform transition-all duration-300 scale-95 opacity-0" id="key-modal-content"><h3 class="text-2xl font-bold mb-2">ต้องการคีย์สำหรับหลักสูตรนี้</h3><p class="text-[var(--text-secondary)] mb-6">โปรดป้อนคีย์เพื่อปลดล็อกวิดีโอทั้งหมด</p><input type="password" id="key-input" class="w-full p-3 border border-[var(--border-color)] rounded-lg mb-2 bg-[var(--input-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]" placeholder="คีย์การเข้าถึงหลักสูตร" /><p id="key-validation-message" class="text-red-500 text-sm mb-4 h-5"></p><div class="flex justify-end space-x-3"><button id="cancel-key-input" class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full font-semibold transition-all shadow-lg shadow-red-500/30">ยกเลิก</button><button id="submit-key-input" class="px-5 py-2 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white rounded-full font-semibold transition-all shadow-lg shadow-indigo-500/30">ยืนยัน</button></div></div>`;
                 showModal('key-modal', modalContent);
             }
@@ -1100,7 +1094,6 @@
             }
         });
 
-
         // --- YouTube Player ---
         function playYouTubeVideo(videoId, partIndex, isUserClick = false) {
             currentPlayingIndex = partIndex;
@@ -1109,7 +1102,6 @@
             const part = selectedCourseData.videoParts[partIndex];
             const hasVideo = videoId && videoId.trim() !== '';
 
-            // Destroy any existing player to ensure a clean state
             if (youtubePlayer) {
                 youtubePlayer.destroy();
                 youtubePlayer = null;
@@ -1117,13 +1109,10 @@
             $('#youtube-player-container').empty();
 
             if (!hasVideo) {
-                // REVISED LOGIC FOR NO-VIDEO PARTS
-                // If there is no video, mark progress immediately because the user clicked it.
                 if (isUserClick) {
                     saveProgress(selectedCourseData.id, partIndex);
                 }
                 
-                // Show the appropriate placeholder.
                 $('#player-placeholder').hide();
                 $('#resource-placeholder').removeClass('hidden').addClass('flex');
                 return;
@@ -1143,7 +1132,6 @@
         
         function onPlayerStateChange(event) {
             if (event.data === YT.PlayerState.ENDED) {
-                // Save progress for the video that just finished
                 saveProgress(selectedCourseData.id, currentPlayingIndex);
 
                 const nextIndex = currentPlayingIndex + 1;
@@ -1152,10 +1140,9 @@
                     const nextPartIsFree = !nextVideo.keyId;
                     const courseIsUnlocked = !selectedCourseData.courseKeyId || localStorage.getItem(`unlocked_course_${selectedCourseData.id}`) === 'true';
 
-                    // Autoplay next video only if it's free or the course is already unlocked
                     if (nextPartIsFree || courseIsUnlocked) {
                          showMessageBox(`กำลังเล่นพาร์ทต่อไป: ${nextVideo.title}`);
-                         playYouTubeVideo(nextVideo.videoId, nextIndex); // isUserClick is false by default
+                         playYouTubeVideo(nextVideo.videoId, nextIndex);
                     } else {
                         showMessageBox('บทเรียนถัดไปถูกล็อก', 'error');
                          currentPlayingIndex = -1;
@@ -1185,4 +1172,3 @@
     </script>
 </body>
 </html>
-
