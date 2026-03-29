@@ -331,7 +331,6 @@
 
     <script>
         // ==========================================
-        // ตั้งค่า API URL
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwc7PFWxlhN3RlHAGjo2zpoIIoFsd7REJqGIFXacxe3B65-AOvwqLNwtXakcVi3hUztYA/exec"; 
         // ==========================================
 
@@ -405,10 +404,6 @@
             hideLoading();
             showModal('access-gate-modal');
         }
-        
-        // ----------------------------------------------------
-        // 1. ปุ่ม Login (Verify Global Key) - ใช้ JSONP + ถอดรหัส Base64
-        // ----------------------------------------------------
         $(document).on('click', '#submit-global-key', function() {
             const enteredKey = $('#global-key-input').val().trim();
             const $btn = $(this);
@@ -449,9 +444,6 @@
 
         $(document).on('keypress', '#global-key-input', e => { if (e.which === 13) $('#submit-global-key').click(); });
 
-        // ----------------------------------------------------
-        // 2. โหลดข้อมูลหลักสูตรทั้งหมด - ใช้ JSONP + ถอดรหัส Base64
-        // ----------------------------------------------------
         function loadMainContent() {
             showLoading();
             $('#app-header, #app-main, #app-footer').removeClass('hidden');
@@ -929,9 +921,6 @@
             $(this).toggleClass('active'); 
         });
 
-        // ----------------------------------------------------
-        // 3. ปุ่มปลดล็อก Course Key - ใช้ JSONP + ถอดรหัส Base64
-        // ----------------------------------------------------
         $(document).on('click', '#submit-key-input', function() {
             const enteredKey = $('#key-input').val().trim();
             const $btn = $(this);
@@ -1090,10 +1079,6 @@
             lucide.createIcons(); 
             initCustomDropdowns();
         });
-
-        // ----------------------------------------------------
-        // ระบบป้องกันการใช้ DevTools ขั้นพื้นฐาน
-        // ----------------------------------------------------
         document.addEventListener('contextmenu', event => event.preventDefault());
         document.addEventListener('keydown', function(e) {
             if(e.keyCode == 123) { e.preventDefault(); return false; } // บล็อก F12
